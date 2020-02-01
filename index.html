@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Halma AI</title>
+    <link rel="stylesheet" href="style.css"/>
+<!--    <script src="halma-tools.js" type="module"></script>-->
+<!--    <script src="halma.js" type="module"></script>-->
+</head>
+<body>
+    <div class="basic-container">
+        <h1>Halma AI</h1>
+<!--        <div>-->
+<!--            <a>About</a>-->
+<!--            <a>Help</a>-->
+<!--        </div>-->
+    </div>
+    <div class="basic-container" id="board-container">
+        <div id="sidebars"></div>
+        <canvas class="board-content" id="board-back" width="960" height="960"></canvas>
+        <canvas class="board-content" id="selector" width="960" height="960"></canvas>
+        <canvas class="board-content" id="board-front" width="960" height="960"></canvas>
+    </div>
+    <div class="basic-container" id="options-container">
+<!--        <span class="options">Let AI play as</span>-->
+<!--        <select class="options" id="option-player">-->
+<!--            <option value="none" selected>NOBODY</option>-->
+<!--            <option value="black">BLACK</option>-->
+<!--            <option value="white">WHITE</option>-->
+<!--        </select>-->
+<!--        <span class="options">with search depth = </span>-->
+<!--        <select class="options" id="option-depth">-->
+<!--            <option value="1">1</option>-->
+<!--            <option value="2">2</option>-->
+<!--            <option value="3" selected>3</option>-->
+<!--            <option value="4">4</option>-->
+<!--        </select>-->
+        <button class="options" type="button" id="auto-step">Auto Step</button>
+    </div>
+    <div class="basic-container">
+        <table>
+            <tr>
+                <th>Algorithm</th>
+                <td>Minimax with &alpha;-&beta; pruning</td>
+            </tr>
+            <tr>
+                <th>Played as</th>
+                <td id="table-player"></td>
+            </tr>
+            <tr>
+                <th>Searched depth</th>
+                <td id="table-depth"></td>
+            </tr>
+            <tr>
+                <th>Searched possibilities</th>
+                <td id="table-count"></td>
+            </tr>
+            <tr>
+                <th>Used time</th>
+                <td id="table-time"></td>
+            </tr>
+        </table>
+    </div>
+<!--    <footer class="basic-container">-->
+<!--        <p>GitGub: <a href="">123</a>.</p>-->
+<!--    </footer>-->
+    <script src="halma-ai.js" type="module"></script>
+    <script type="module">
+        import {BoardBack, BoardFront} from "./halma.js";
+        let boardBack = new BoardBack("board-back");
+        let boardFront = new BoardFront("board-front");
+
+        boardBack.drawBoard();
+    </script>
+    <script type="module">
+        import {SIZE} from "./halma-tools.js";
+        let sidebar = document.getElementById("sidebars");
+        for (let i = 0; i < SIZE; i++) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "margin-up");
+            span.setAttribute("style", "left:" + (i*30+30) + "px");
+            span.appendChild(document.createTextNode(i.toString()));
+            sidebar.appendChild(span);
+        }
+        for (let i = 0; i < SIZE; i++) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "margin-down");
+            span.setAttribute("style", "left:" + (i*30+30) + "px");
+            span.appendChild(document.createTextNode(i.toString()));
+            sidebar.appendChild(span);
+        }
+        for (let i = 0; i < SIZE; i++) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "margin-left");
+            span.setAttribute("style", "top:" + (i*30+30) + "px");
+            span.appendChild(document.createTextNode(i.toString()));
+            sidebar.appendChild(span);
+        }
+        for (let i = 0; i < SIZE; i++) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "margin-right");
+            span.setAttribute("style", "top:" + (i*30+30) + "px");
+            span.appendChild(document.createTextNode(i.toString()));
+            sidebar.appendChild(span);
+        }
+    </script>
+</body>
+</html>

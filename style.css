@@ -1,0 +1,84 @@
+h1 {
+    font-family: Georgia, serif;
+    font-size: 40px;
+    text-align: center;
+}
+
+#board-container {
+    width: 520px;
+    height: 520px;
+}
+
+.basic-container {
+    width: 480px;
+    margin: 10px auto;
+}
+
+.board-content{
+    width: 480px;
+    height: 480px;
+}
+
+#board-container {
+    position: relative;
+    margin: 0 auto;
+}
+
+.board-content {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.margin-up {
+    position: absolute;
+    width: 30px;
+    top: 0;
+}
+
+.margin-down {
+    position: absolute;
+    width: 30px;
+    top: calc(100% - 15px);
+}
+
+.margin-left {
+    position: absolute;
+    height: 30px;
+    left: 0;
+}
+
+.margin-right {
+    position: absolute;
+    height: 30px;
+    left: calc(100% - 15px);
+}
+
+table {
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+#options-container {
+    height: 20px;
+}
+
+#auto-step {
+    float: right;
+}
+
+.options {
+    display: inline-block;
+}
+
+footer {
+    text-align: center;
+}
