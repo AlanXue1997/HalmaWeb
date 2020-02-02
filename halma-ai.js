@@ -3,7 +3,7 @@ import {N_PIECES, SIZE, BLACK, WHITE, EMPTY, possiblePosition, opponent} from ".
 let searchCount = 0;
 
 function tableShow(player, depth, count, time) {
-    document.getElementById("table-player").innerText = player === WHITE ? "WHITE" : "BLACK";
+    document.getElementById("table-player").innerHTML = player === WHITE ? "&#9898;WHITE" : "&#9899;BLACK";
     document.getElementById("table-depth").innerText = depth;
     document.getElementById("table-count").innerText = count;
     document.getElementById("table-time").innerText = time.toFixed(4) + " ms";
@@ -63,7 +63,15 @@ function minMaxSearch(depth, alpha, beta, past, board, blackPositions, whitePosi
             board[nx][ny] = board[x][y];
             board[x][y] = EMPTY;
             positions[i] = [nx, ny];
-            let [vPrime, _o, _t] = minMaxSearch(depth-1, alpha, beta, past + stepV, board, blackPositions, whitePositions, player, !findMax);
+            let vPrime = minMaxSearch(
+                depth-1,
+                alpha, beta,
+                past + stepV,
+                board,
+                blackPositions,
+                whitePositions,
+                player,
+                !findMax)[0];
             board[x][y] = board[nx][ny];
             board[nx][ny] = EMPTY;
             positions[i] = [x, y];
@@ -98,8 +106,8 @@ export function getMove(board, player) {
     }
     searchCount = 0;
     let t0 = performance.now();
-    let depth = 3;
-    let [value, origin, target] = minMaxSearch(
+    let depth = document.getElementById("option-depth").value;
+    let result = minMaxSearch(
         depth,
         Number.NEGATIVE_INFINITY,
         Number.POSITIVE_INFINITY,
@@ -110,6 +118,8 @@ export function getMove(board, player) {
         player,
         true
     );
+    let origin = result[1];
+    let target = result[2];
     let t1 = performance.now();
     tableShow(player, depth, searchCount, t1-t0);
     return [origin, target];

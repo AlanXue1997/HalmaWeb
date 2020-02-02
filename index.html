@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <title>Halma AI</title>
     <link rel="stylesheet" href="style.css"/>
-<!--    <script src="halma-tools.js" type="module"></script>-->
-<!--    <script src="halma.js" type="module"></script>-->
 </head>
 <body>
-    <div class="basic-container">
+    <div class="basic-container" id="header">
         <h1>Halma AI</h1>
-<!--        <div>-->
-<!--            <a>About</a>-->
-<!--            <a>Help</a>-->
-<!--        </div>-->
     </div>
     <div class="basic-container" id="board-container">
         <div id="sidebars"></div>
@@ -22,19 +16,19 @@
         <canvas class="board-content" id="board-front" width="960" height="960"></canvas>
     </div>
     <div class="basic-container" id="options-container">
-<!--        <span class="options">Let AI play as</span>-->
-<!--        <select class="options" id="option-player">-->
-<!--            <option value="none" selected>NOBODY</option>-->
-<!--            <option value="black">BLACK</option>-->
-<!--            <option value="white">WHITE</option>-->
-<!--        </select>-->
-<!--        <span class="options">with search depth = </span>-->
-<!--        <select class="options" id="option-depth">-->
-<!--            <option value="1">1</option>-->
-<!--            <option value="2">2</option>-->
-<!--            <option value="3" selected>3</option>-->
-<!--            <option value="4">4</option>-->
-<!--        </select>-->
+        <label for="option-player" class="options">Let AI play as</label>
+        <select class="options" id="option-player">
+            <option value="none" selected>NOBODY</option>
+            <option value="black">BLACK</option>
+            <option value="white">WHITE</option>
+        </select>
+        <label for="option-depth" class="options">with search depth = </label>
+        <select class="options" id="option-depth">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+        </select>
         <button class="options" type="button" id="auto-step">Auto Step</button>
     </div>
     <div class="basic-container">
@@ -61,9 +55,99 @@
             </tr>
         </table>
     </div>
-<!--    <footer class="basic-container">-->
-<!--        <p>GitGub: <a href="">123</a>.</p>-->
-<!--    </footer>-->
+    <footer class="basic-container">
+        <div id="menu">
+            <a id="help-link" href="#">Help</a>
+            <a href="https://github.com/AlanXue1997/HalmaWeb">GitHub</a>
+            <a id="about-link" href="#">About</a>
+        </div>
+        <hr>
+        <p id="copyright">&copy; 2020 by Zhonghao Xue</p>
+    </footer>
+    <div id="help" class="modal">
+        <div class="modal-content">
+            <a href="#" id="help-close" class="modal-close">[&times;]</a>
+            <h2>Help</h2>
+            <p>
+                Basic rules of Halma can be found in the
+                <a href="https://en.wikipedia.org/wiki/Halma">[wiki page]</a>.
+            </p>
+            <p>
+                &#9899;Black will move first.
+            </p>
+            <p>
+                When AI plays as:
+            </p>
+            <ul>
+                <li>
+                    NOBODY: AI won't automatically play.
+                </li>
+                <li>
+                    BLACK: AI will automatically play in Black's turn.
+                </li>
+                <li>
+                    WHITE: AI will automatically play in White's turn.
+                </li>
+            </ul>
+            <p>
+                When AI doesn't automatically play:
+            </p>
+            <ul>
+                <li>
+                    You may use mouse to play next step.
+                </li>
+                <li>
+                    You may press <button>Auto Step</button> to let AI play next step.
+                </li>
+            </ul>
+            <p>Search depth</p>
+            <p class="indent">
+                <i>Search depth</i> is a parameter used by Minimax algorithm.
+                Technically, a higher depth value will lead to a better choice,
+                but will dramatically decrease algorithm speed.
+                <br>
+                More details can be found in the
+                <a href="https://en.wikipedia.org/wiki/Minimax">[wiki page]</a>.
+            </p>
+        </div>
+    </div>
+    <div id="about" class="modal">
+        <div class="modal-content">
+            <a href="#" id="about-close" class="modal-close">[&times;]</a>
+            <h2>About</h2>
+            <p class="indent">
+                This project is completely implemented using front-end technologies(HTML, CSS and JavaScript).
+            </p>
+            <p>
+                Wikis:
+            </p>
+            <ul>
+                <li>
+                    <a href="https://en.wikipedia.org/wiki/Halma">[Halma]</a>
+                </li>
+                <li>
+                    <a href="https://en.wikipedia.org/wiki/Minimax">[Minimax]</a>
+                </li>
+                <li>
+                    <a href="https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning">[&alpha;-&beta; pruning]</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        document.getElementById("help-link").addEventListener("click", () => {
+            document.getElementById("help").style.display = "block";
+        });
+        document.getElementById("help-close").addEventListener("click", () => {
+            document.getElementById("help").style.display = "none";
+        });
+        document.getElementById("about-link").addEventListener("click", () => {
+            document.getElementById("about").style.display = "block";
+        });
+        document.getElementById("about-close").addEventListener("click", () => {
+            document.getElementById("about").style.display = "none";
+        });
+    </script>
     <script src="halma-ai.js" type="module"></script>
     <script type="module">
         import {BoardBack, BoardFront} from "./halma.js";

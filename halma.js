@@ -35,64 +35,6 @@ class BoardBack{
     }
 }
 
-class BoardLogic {
-    constructor() {
-        this.board = Array(SIZE).fill(0).map(() => new Array(SIZE).fill(EMPTY));
-        // assign init black pieces
-        for (let i = 0; i < 2; ++i) {
-            for (let j = 0; j < 5; ++j) {
-                this.board[i][j] = BLACK;
-                this.board[SIZE-i-1][SIZE-j-1] = WHITE;
-            }
-        }
-        for (let j = 0; j < 4; ++j) {
-            this.board[2][j] = BLACK;
-            this.board[SIZE-3][SIZE-j-1] = WHITE;
-        }
-        for (let j = 0; j < 3; ++j) {
-            this.board[3][j] = BLACK;
-            this.board[SIZE-4][SIZE-j-1] = WHITE;
-        }
-        for (let j = 0; j < 2; ++j) {
-            this.board[4][j] = BLACK;
-            this.board[SIZE-5][SIZE-j-1] = WHITE;
-        }
-    }
-
-    possiblePosition(positions) {
-        for (let i = 0; i < positions.length; ++i) {
-            let x = positions[i][0];
-            let y = positions[i][1];
-            for (let j = 0; j < RULES.length; ++j) {
-                let nx = x + RULES[j][0];
-                let ny = y + RULES[j][1];
-                let nnx = nx + RULES[j][0];
-                let nny = ny + RULES[j][1];
-                if (nnx >= 0 && nnx < SIZE && nny >= 0 && nny < SIZE
-                    && this.board[nx][ny] !== EMPTY && this.board[nnx][nny] === EMPTY) {
-                    let repeat = false;
-                    for (let k = 0; k < positions.length; ++k) {
-                        if (positions[k][0] === nnx && positions[k][1] === nny) {
-                            repeat = true;
-                            break;
-                        }
-                    }
-                    if (!repeat) {
-                        positions.push([nnx, nny]);
-                    }
-                }
-            }
-        }
-        for (let j = 0; j < RULES.length; ++j) {
-            let nx = positions[0][0] + RULES[j][0];
-            let ny = positions[0][1] + RULES[j][1];
-            if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE && this.board[nx][ny] === EMPTY) {
-                positions.push([nx, ny]);
-            }
-        }
-    }
-}
-
 class Selector {
     constructor() {
         this.canvas = document.getElementById("selector");
@@ -149,6 +91,8 @@ class BoardFront {
         this.canvas = document.getElementById(id);
         this.canvas.addEventListener('click', (e) => this.click(e));
         document.getElementById("auto-step").addEventListener('click', () => this.autoStep());
+        this.autoPlayer = "none";
+        document.getElementById("option-player").addEventListener("change", (e) => this.changeAutoPlayer(e));
         this.ctx = this.canvas.getContext("2d");
         this.gap = 60;
         this.board = initBoard();
@@ -159,6 +103,19 @@ class BoardFront {
         this.lastMove = [];
         this.update();
     }
+
+    changeAutoPlayer(e) {
+        this.autoPlayer = e.target.value;
+        this.checkAutoStep();
+    }
+
+    checkAutoStep() {
+        if ((this.autoPlayer === "black" && this.player === BLACK) ||
+            (this.autoPlayer === "white" && this.player === WHITE)) {
+            this.autoStep();
+        }
+    }
+
 
     place(x, y, color) {
         this.ctx.beginPath();
@@ -209,6 +166,7 @@ class BoardFront {
             for (let i = 1; i < this.positions.length; ++i) {
                 if (this.positions[i][0] === x && this.positions[i][1] === y) {
                     this.move(this.positions[0], this.positions[i]);
+                    this.checkAutoStep();
                     return;
                 }
             }
