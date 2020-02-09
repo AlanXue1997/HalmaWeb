@@ -1,4 +1,4 @@
-import {N_PIECES, SIZE, BLACK, WHITE, EMPTY, MASK, possiblePosition, opponent, isOverByPositions} from "./halma-tools.js";
+import {N_PIECES, SIZE, BLACK, WHITE, EMPTY, MASK, possiblePosition, opponent, isOverByPositions} from "./halma-tools.js?v=1.1";
 
 let searchCount = 0;
 

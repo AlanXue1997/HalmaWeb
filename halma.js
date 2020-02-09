@@ -1,5 +1,5 @@
-import {BLACK, EMPTY, SIZE, WHITE, possiblePosition, initBoard, isOverByBoard} from "./halma-tools.js";
-import {getMove} from "./halma-ai.js";
+import {BLACK, EMPTY, SIZE, WHITE, possiblePosition, initBoard, isOverByBoard} from "./halma-tools.js?v=1.1";
+import {getMove} from "./halma-ai.js?v=1.1";
 
 class BoardBack{
     constructor(id) {
