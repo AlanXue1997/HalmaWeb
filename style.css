@@ -135,3 +135,7 @@ footer {
 .indent {
     margin-left: 30px;
 }
+
+#debug-container {
+    display: none;
+}

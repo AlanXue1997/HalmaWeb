@@ -1,4 +1,4 @@
-import {N_PIECES, SIZE, BLACK, WHITE, EMPTY, possiblePosition, opponent} from "./halma-tools.js";
+import {N_PIECES, SIZE, BLACK, WHITE, EMPTY, MASK, possiblePosition, opponent, isOverByPositions} from "./halma-tools.js";
 
 let searchCount = 0;
 
@@ -11,29 +11,11 @@ function tableShow(player, depth, count, time) {
 
 function pointValue([x, y], color) {
     const maskValue = 2;
-    const mask = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
-    ];
     if (color === WHITE) {
         x = SIZE - x - 1;
         y = SIZE - y - 1;
     }
-    return (x + y) * (mask[x][y] === 1 ? maskValue : 1);
+    return (x + y) * (MASK[x][y] === 1 ? maskValue : 1);
 }
 
 function stepValue(origin, target, player, color) {
@@ -52,6 +34,10 @@ function minMaxSearch(depth, alpha, beta, past, board, blackPositions, whitePosi
     let origin = [];
     let target = [];
     const positions = (player === BLACK && findMax) || (player === WHITE && !findMax) ? blackPositions : whitePositions;
+    // to prevent vacillation at the end
+    if (isOverByPositions(positions, player)) {
+        return [Number.POSITIVE_INFINITY, null, null];
+    }
     for (let i = 0; i < N_PIECES; ++i) {
         const queue = [positions[i]];
         possiblePosition(board, queue);

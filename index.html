@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Halma AI</title>
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="style.css?v=1.0"/>
 </head>
 <body>
     <div class="basic-container" id="header">
@@ -54,6 +54,9 @@
                 <td id="table-time"></td>
             </tr>
         </table>
+    </div>
+    <div class="basic-container" id="debug-container">
+        <p id="board-text"></p>
     </div>
     <footer class="basic-container">
         <div id="menu">
@@ -148,16 +151,16 @@
             document.getElementById("about").style.display = "none";
         });
     </script>
-    <script src="halma-ai.js" type="module"></script>
+<!--    <script src="halma-ai.js" type="module"></script>-->
     <script type="module">
-        import {BoardBack, BoardFront} from "./halma.js";
+        import {BoardBack, BoardFront} from "./halma.js?v=1.0";
         let boardBack = new BoardBack("board-back");
         let boardFront = new BoardFront("board-front");
 
         boardBack.drawBoard();
     </script>
     <script type="module">
-        import {SIZE} from "./halma-tools.js";
+        import {SIZE} from "./halma-tools.js?v=1.0";
         let sidebar = document.getElementById("sidebars");
         for (let i = 0; i < SIZE; i++) {
             let span = document.createElement("span");

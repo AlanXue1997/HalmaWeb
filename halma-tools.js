@@ -4,32 +4,52 @@ export const EMPTY = 0;
 export const BLACK = 1;
 export const WHITE = 2;
 export const RULES = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]];
+export const MASK = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
+];
 
 export function opponent(player) {
     return 3 - player;
 }
 
-export function initBoard() {
-    let board = Array(SIZE).fill(0).map(() => new Array(SIZE).fill(EMPTY));
-    // assign init black pieces
+function boardMap(func) {
     for (let i = 0; i < 2; ++i) {
         for (let j = 0; j < 5; ++j) {
-            board[i][j] = BLACK;
-            board[SIZE-i-1][SIZE-j-1] = WHITE;
+            func(i, j);
         }
     }
     for (let j = 0; j < 4; ++j) {
-        board[2][j] = BLACK;
-        board[SIZE-3][SIZE-j-1] = WHITE;
+        func(2, j);
     }
     for (let j = 0; j < 3; ++j) {
-        board[3][j] = BLACK;
-        board[SIZE-4][SIZE-j-1] = WHITE;
+        func(3, j);
     }
     for (let j = 0; j < 2; ++j) {
-        board[4][j] = BLACK;
-        board[SIZE-5][SIZE-j-1] = WHITE;
+        func(4, j);
     }
+}
+
+export function initBoard() {
+    let board = Array(SIZE).fill(0).map(() => new Array(SIZE).fill(EMPTY));
+    boardMap((i, j) => {
+        board[i][j] = BLACK;
+        board[SIZE-i-1][SIZE-j-1] = WHITE;
+    });
     return board;
 }
 
@@ -64,4 +84,33 @@ export function possiblePosition(board, positions) {
             positions.push([nx, ny]);
         }
     }
+}
+
+export function isOverByBoard(board) {
+    let finishedBlack = true;
+    let finishedWhite = true;
+    boardMap((i, j) => {
+        if (board[i][j] !== WHITE){
+            finishedWhite = false;
+        }
+        if (board[SIZE-i-1][SIZE-j-1] !== BLACK) {
+            finishedBlack = false;
+        }
+    });
+    return finishedWhite || finishedBlack;
+}
+
+export function isOverByPositions(positions, player) {
+    let getMask;
+    if (player === BLACK) {
+        getMask = (p) => { return MASK[p[0]][p[1]]; };
+    } else {
+        getMask = (p) => { return MASK[SIZE-p[0]-1][SIZE-p[1]-1]; };
+    }
+    for (let k = 0; k < positions.length; ++k) {
+        if (getMask(positions[k]) !== 1) {
+            return false;
+        }
+    }
+    return true;
 }

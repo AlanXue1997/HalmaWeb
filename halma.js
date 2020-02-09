@@ -1,4 +1,4 @@
-import {BLACK, EMPTY, SIZE, WHITE, possiblePosition, initBoard} from "./halma-tools.js";
+import {BLACK, EMPTY, SIZE, WHITE, possiblePosition, initBoard, isOverByBoard} from "./halma-tools.js";
 import {getMove} from "./halma-ai.js";
 
 class BoardBack{
@@ -84,6 +84,7 @@ class Selector {
 const STATE = {
     IDLE: 0,
     SELECT: 1,
+    OVER: 2
 };
 
 class BoardFront {
@@ -139,6 +140,28 @@ class BoardFront {
                 }
             }
         }
+        let boardText = document.getElementById("board-text");
+        let text = '[\n';
+        for (let i = 0; i < SIZE; ++i) {
+            text += '[';
+            for (let j = 0;  j < SIZE; ++j) {
+                if (this.board[i][j] === EMPTY) {
+                    text += EMPTY;
+                }
+                else if (this.board[i][j] === BLACK) {
+                    text += BLACK;
+                }
+                else {
+                    text += WHITE;
+                }
+                if (j !== SIZE - 1) {
+                    text += ',';
+                }
+            }
+            text += i === SIZE - 1 ? ']\n' : '],\n';
+        }
+        text += ']';
+        boardText.innerText = text;
     }
 
     move(origin, target) {
@@ -149,15 +172,25 @@ class BoardFront {
         this.player = this.player === WHITE ? BLACK : WHITE;
         this.positions.length = 0;
         this.selector.update(this.positions, this.lastMove);
-        this.state = STATE.IDLE;
+        if (isOverByBoard(this.board)) {
+            this.state = STATE.OVER;
+        } else {
+            this.state = STATE.IDLE;
+        }
     }
 
     autoStep() {
+        if (this.state === STATE.OVER) {
+            return;
+        }
         let [origin, target] = getMove(this.board, this.player);
         this.move(origin, target);
     }
 
     click(e) {
+        if (this.state === STATE.OVER) {
+            return;
+        }
         const rect = this.canvas.getBoundingClientRect();
         const y = Math.floor((e.clientX - rect.left)*2 / this.gap);
         const x = Math.floor((e.clientY - rect.top)*2 / this.gap);
@@ -166,7 +199,9 @@ class BoardFront {
             for (let i = 1; i < this.positions.length; ++i) {
                 if (this.positions[i][0] === x && this.positions[i][1] === y) {
                     this.move(this.positions[0], this.positions[i]);
-                    this.checkAutoStep();
+                    if (this.state !== STATE.OVER) {
+                        this.checkAutoStep();
+                    }
                     return;
                 }
             }
